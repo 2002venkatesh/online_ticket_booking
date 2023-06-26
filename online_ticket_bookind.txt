@@ -1,0 +1,143 @@
+users=[]
+admins=[]
+movielist=[]
+cart_list=[]
+payment_list=[]
+class user:
+    def __init__(self,userid,name,email,password,gender,role):
+        self.userid=userid
+        self.name=name
+        self.password=password
+        self.email=email
+        self.role=role
+        self.gender=gender
+    def hardcoredata(self):
+        users.append(self)
+        return users
+    def validate(self,gnname,gnpassword):                               
+        for i in users:
+            if i.name==gnname and i.password==gnpassword:
+                return i
+    def welcome(self,gnname):                                                   #polymorphism
+        print("Welcome User "+gnname)
+class admin:
+    def __init__(self,userid,name,email,password,gender,role):
+        self.userid=userid
+        self.name=name
+        self.password=password
+        self.email=email
+        self.role=role
+        self.gender=gender
+    def hardcoredata(self):
+        admins.append(self)
+        return admins
+    def validate(self,gnname,gnpassword):                               
+        for i in admins:
+            if i.name==gnname and i.password==gnpassword:
+                return i
+    def welcome(self,gnname):                                                   #polymorphism
+        print("welcome Admin "+gnname)
+class movie_list:
+    def __init__(self,userid,movie_id,moviename,price,language):
+        self.movie_id=movie_id
+        self.userid=userid
+        self.moviename=moviename
+        self.price=price
+        self.language=language
+        
+class cart:
+    def __init__(self, booking_id, userid,mov_id,booked_at):
+        self.booking_id = booking_id
+        self.userid = userid
+        self.mov_id = mov_id
+        self.booked_at = booked_at
+class payment:
+    def __init__(self,payment_id,userid,cvv,amount,expiry_date,card_num):
+        self.userid=userid
+        self.payment_id=payment_id
+        self.cvv=cvv
+        self.amount=amount
+        self.expiry_date=expiry_date
+        self.card_num=card_num
+    def hardcoredata(self):
+        payment_list.append(self)
+class movieshowcase(user):
+    def __init__(self,userid,name,email,password,gender,role):
+        super().__init__(userid,name,email,password,gender,role)                #inheritance
+    def movies_for_customer(self):
+        stayInCustomerMenu = True
+        while(stayInCustomerMenu):
+            choice = int(input("Enter your Choice: "))
+            print("Customer Menu")
+            print("1. Display the movielist")
+            print("2. Add to cart")
+            print("3. payment options")
+            print("4. Booked History")
+            print("5. Delete your history")
+            print("6. Logout")
+            if choice==1:
+                m1=movie_list(1,self.userid,"bahubali",130,"telugu")
+                m2=movie_list(2,self.userid,"beast",150,"tamil")
+                m3=movie_list(3,self.userid,"pokiri",160,"tamil")
+                movielist.append(m1)
+                movielist.append(m2)
+                movielist.append(m3)
+                for i in movielist:
+                    print(i.movie_id)
+                    print(i.moviename)
+                    print(i.price)
+                    print(i.language)
+            elif choice==2:
+                booking_count=0 
+                mov_id = int(input("Enter the ID of your  movie:"))
+                booking_data = cart(booking_count,self.userid,mov_id,'12-2-2023')
+                cart_list.append(booking_data)
+                booking_count += 1
+                print("..................Cart items added successfully")
+                print("Your cart")
+                for i in cart_list:
+                    print("User name :",self.name)
+                    print("booking_id : ",booking_count)
+                    print("movie_id  : ",mov_id)
+            elif choice==3:
+                mode=input("Mode of payment: cash/card")
+                if mode=="card":
+                    payment_id=len(payment_list)
+                    card_num=input("card_num")
+                    cvv=input("Enter_cvv")
+                    expiry_date=input("enter the expiry date")
+                    payment1=payment(payment_id,self.userid,cvv,110,expiry_date,card_num)
+                    payment_list.append(payment1)
+                    print("..........payment successfully..........")
+                    payment_id+=1
+                elif mode=="cash":
+                    payment_id=len(payment_list)
+                    payment1=payment(payment_id,self.userid,"",110,"","")
+                    payment_list.append(payment1)
+                    print("pay the cash on Theatre")
+            elif choice==4:
+                booking_history=payment_list                                                 
+                for i in booking_history:                           #stack
+                    print("user id",self.userid)
+                    print("payment_id",i.payment_id)
+                    print("amount paid",i.amount)
+            elif choice==5:
+                print(payment_list.pop())
+                print("booking history deleted succesfully")
+            else:
+                stayInCustomerMenu=False
+                
+u=user(1,"venkat","venkat@gamil.com",31231,"m","customer")
+u.hardcoredata()
+u=user(2,"praveen","praveen@gmail.com",3123133,"m","customer")
+u.hardcoredata()
+a=admin(3,"","priya@gmail.com",33331231,"f","admin")
+a.hardcoredata()
+a=admin(4,"janz","janani@gmail.com",31222231,"f","admin")
+a.hardcoredata()
+login_user=u.validate("praveen",3123133)
+if login_user:
+    if login_user.role=="customer":
+        login_user.welcome(login_user.name)
+        payment1=payment(1,login_user.userid,123344,110,1/10/2025,"123abc456")
+        payment1.hardcoredata()
